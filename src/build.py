@@ -59,10 +59,11 @@ def build():
 
     bg = a['bg-black']
     N(card('prologue', '序：最後一晚', a, bg=a['cover'], start=True, bgm=a.get('bgm-rain') or None))
-    big = {'card_r17_candy': a['cg-locks'], 'card_st_pull': a['cg-store'], 'card_st_solve': a['cg-crane'], 'card_letter': a['cg-letter'],
+    # 接在 CG 後面的卡片也要有背景，不然上一張 CG 會留在畫面上、立繪疊在 CG 的人身上（作者 2026-10-18 截圖）
+    big = {'ending_a1': a['cg-letter'], 'card_r17_candy': a['cg-locks'], 'card_st_pull': a['cg-store'], 'card_st_solve': a['cg-crane'], 'card_letter': a['cg-letter'],
            'ending_a2': a['cg-end-a'], 'ending_b1': a['cg-end-b'], 'ending_b2': a['cg-end-b']}
     era = {k: 'hs' for k in ('card_r17_intro', 'card_r17_try', 'card_r17_candy')}
-    jumped = {'card_r17_enter': bg, 'card_r17_shift': bg, 'card_r21_back': bg, 'card_st_enter': bg, 'card_st_back': bg,
+    jumped = {'card_st_shift': bg, 'card_r17_enter': bg, 'card_r17_shift': bg, 'card_r21_back': bg, 'card_st_enter': bg, 'card_st_back': bg,
               'card_climax': None, 'card_letter': None}
     for cid in L:
         if cid == 'prologue':
