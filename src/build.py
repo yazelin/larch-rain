@@ -64,7 +64,7 @@ def build():
            'ending_a2': a['cg-end-a'], 'ending_b1': a['cg-end-b'], 'ending_b2': a['cg-end-b']}
     era = {k: 'hs' for k in ('card_r17_intro', 'card_r17_try', 'card_r17_candy')}
     jumped = {'card_st_shift': bg, 'card_r17_enter': bg, 'card_r17_shift': bg, 'card_r21_back': bg, 'card_st_enter': bg, 'card_st_back': bg,
-              'card_climax': None, 'card_letter': None}
+              'card_letter': None}
     for cid in L:
         if cid == 'prologue':
             continue
@@ -72,7 +72,7 @@ def build():
         if cid in jumped and jumped[cid]:
             b = jumped[cid]
         extra = {}
-        if cid == 'card_climax' and a.get('bgm-climax'):
+        if cid.startswith('card_climax') and a.get('bgm-climax'):
             extra['bgm'] = a['bgm-climax']
         if cid == 'ending_a1' and a.get('bgm-end-a'):
             extra['bgm'] = a['bgm-end-a']
@@ -86,7 +86,8 @@ def build():
     link('card_r17_shift', 'm-rooftop-21')
     link('card_r21_back', 'm-station')
     link('card_st_back', 'm-station')
-    link('card_climax', 'card_letter')
+    for k in ('lo', 'mid', 'hi'):
+        link(f'card_climax_{k}', 'card_letter')
     link('card_letter', 'card_choice')
     cards.choice_link(board, 'card_choice', 'ending_a1', 0)
     cards.choice_link(board, 'card_choice', 'ending_b1', 1)

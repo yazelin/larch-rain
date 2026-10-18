@@ -89,8 +89,9 @@ def station(art):
            actions=[say('還不是現在。我還不能過去。', speaker='player')],
            pages=[page('gate-open', both, [
                setv('phase', 'climax'),
-               branch([cond('fade', 2, 'gte')], [card('card_fade_hi')], [branch([cond('fade', 1, 'gte')], [card('card_fade_mid')], [card('card_fade_lo')])]),
-               jump('card_climax'),
+               # 先播卡再 jump 會把卡跳掉（2026-10-18 試玩：外套描述沒出現），改成判斷後直接跳到三張開場之一
+               branch([cond('fade', 2, 'gte')], [jump('card_climax_hi')],
+                      [branch([cond('fade', 1, 'gte')], [jump('card_climax_mid')], [jump('card_climax_lo')])]),
            ], trigger='touch', solid=False)]),
     ]
     # 靠近公車亭（x=13 那一排）：心跳聲（設計：越靠近，雨聲越小、心跳越清楚）
