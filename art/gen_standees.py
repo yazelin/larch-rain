@@ -14,7 +14,7 @@ APPEAL = ''   # 每人一句好看的方向，寫在 WHO 的描述裡（作者 2
 CUT = pathlib.Path.home() / '.claude/skills/cutout/cutout.py'
 BASE = ('A premium visual-novel character standee, HALF BODY from mid-thigh up, the figure fills the height of the image, face large and highly detailed. '
         'Cinematic anime feature-film rendering exactly like Reference 2 (a film still of this same character from our own CG): painterly light and shadow, '
-        'lit as if standing on a rainy Taipei street at night: cool blue-white key light from the left, warm amber street-light bounce on the right side of the face, '
+        'unless told otherwise, lit as if standing on a rainy Taipei street at night: cool blue-white key light from the left, warm amber street-light bounce on the right side of the face, '
         'a thin bright rim light on the hair and shoulders, damp hair with a few raindrops catching light, rich hand-painted fabric texture and folds, subtle film color grading. '
         'Face, hairstyle and outfit exactly like Reference 1, but drawn as an attractive lead character of a romance anime film: refined, well-proportioned features, '
         'expressive deep eyes with layered irises and soft lower-lid shadow, defined jawline and nose bridge, beautiful natural skin, appealing and memorable; still clearly the same person. '
@@ -27,11 +27,11 @@ WHO = {
     'xu_now': ('xu_now', 'XU FAN, 21, sunny warm handsome with a bright charming smile: both hands in the pocket of his dark grey hoodie, warm easy smile, head slightly tilted, kind eyes that notice everything.'),
     'fang_now': ('fang_now', 'FANG CHENG, 21, gentle graceful beauty with a soft lasting charm: one hand holding the collar of the oversized sage grey-green jacket closed at her chest, '
                  'head slightly lowered with a soft small smile, eyes gentle and a little sad.'),
-    'lin_hs': ('lin_hs', 'LIN YU, 17, in summer high school uniform: hands behind his back hiding something, a nervous half smile, looking sideways. '
+    'lin_hs': ('lin_hs', 'LIN YU, 17, cool and delicately handsome boy, in summer high school uniform: hands behind his back hiding something, a nervous half smile, looking sideways. '
                'Lit by a warm teal-green summer sunset instead of rainy night light.'),
-    'xu_hs': ('xu_hs', 'XU FAN, 17, in summer high school uniform: one hand on the back of his neck, laughing, sleeves rolled. '
+    'xu_hs': ('xu_hs', 'XU FAN, 17, sunny charming handsome boy, in summer high school uniform: one hand on the back of his neck, laughing, sleeves rolled. '
               'Lit by a warm teal-green summer sunset instead of rainy night light.'),
-    'fang_hs': ('fang_hs', 'FANG CHENG, 17, in summer high school uniform: holding a small brass padlock up with both hands, bright teasing smile. '
+    'fang_hs': ('fang_hs', 'FANG CHENG, 17, a gentle pretty girl with lasting charm, in summer high school uniform: holding a small brass padlock up with both hands, bright teasing smile. '
                 'Lit by a warm teal-green summer sunset instead of rainy night light.'),
 }
 
@@ -41,7 +41,7 @@ def gen(job):
     name, n = job
     anchor, desc = WHO[name]
     return codex11.gen(BASE + ' Character: ' + desc, str(RAW / f'{name}_{n}.png'),
-                       refs=[str(R / f'assets/art/p_{anchor}.webp'), str(R / f'art/raw/styleref/{name}.png')], size='1024x1536')
+                       refs=[str(R / f'assets/art/anchor_{anchor}.webp'), str(R / f'art/raw/styleref/{name}.png')], size='1024x1536')
 
 
 def cut(name, n):

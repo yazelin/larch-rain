@@ -6,7 +6,9 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import codex11
 
 R = pathlib.Path(__file__).resolve().parent.parent
-A = lambda n: R / f'assets/art/p_{n}.webp'
+import os
+SFX = os.environ.get('SFX', '')   # 重產輪次前綴，例：SFX=r2_
+A = lambda n: R / f'assets/art/anchor_{n}.webp'   # 全身定錨圖（對話立繪是另一套半身的 p_*）
 STYLE = ('Cinematic anime feature-film still, painterly, restrained and literary, high-end Japanese-animation-quality lighting but the SETTING IS TAIPEI, TAIWAN: '
          'Chinese characters on signs only and never readable, Taiwanese street furniture, absolutely no Japanese text, no Japanese houses or utility-pole streets. '
          'Anamorphic lens feel, shallow depth of field, soft bokeh, subtle film grain, motivated light only. Palette: cold pale blue rain and muted sage grass-ash-green as the one accent. '
@@ -50,8 +52,12 @@ CG = {
 
 def one(name, n):
     who, scene = CG[name]
-    cast = ' '.join(f'Reference {i + 1} is {WHO[w]}.' for i, w in enumerate(who))
-    return codex11.gen(f'{STYLE} {cast} Scene: {scene}', str(R / f'art/raw/cine/{name}_{n}.png'), refs=[str(A(w)) for w in who], size='1536x1024')
+    # 2026-10-18 第二輪：每人兩張參考，半身電影感立繪（臉、髮、光影的標準）＋全身定錨（整套衣服）
+    cast = ' '.join(f'References {2 * i + 1} and {2 * i + 2} are {WHO[w]} (first: cinematic half-body portrait, the standard for face, hair and rendering; second: full-body outfit).'
+                    for i, w in enumerate(who))
+    refs = [str(x) for w in who for x in (R / f'assets/art/p_{w}.webp', A(w))]
+    return codex11.gen(f'{STYLE} {cast} Faces must be as attractive and refined as the half-body portraits. Scene: {scene}',
+                       str(R / f'art/raw/cine/{name}_{SFX}{n}.png'), refs=refs, size='1536x1024')
 
 
 if __name__ == '__main__':

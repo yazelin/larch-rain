@@ -31,7 +31,7 @@ def gen(name):
          'columns: left foot forward, standing, right foot forward). Draw a NEW sprite sheet with exactly the same 3x4 grid, the same chibi proportions, '
          'the same poses and the same soft anime style, but a different character. Reference 2 is the character\'s full portrait: copy the face, hair and outfit exactly. '
          f'Character: {OUTFIT[name]} Twelve separate full-body figures, evenly spaced, none touching. ' + MAG)
-    return codex11.gen(p, str(RAW / f'{name}_raw.png'), refs=[str(GRID), str(R / f'assets/art/p_{name}.webp')], size='1024x1536')
+    return codex11.gen(p, str(RAW / f'{name}_raw.png'), refs=[str(GRID), str(R / f'assets/art/anchor_{name}.webp')], size='1024x1536')
 
 
 def premul_resize(im, size):

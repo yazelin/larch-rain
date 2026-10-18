@@ -222,14 +222,14 @@ def voice_lines():
             for ls in list(L.values()) + list(MAP_LINES.values()) for sp, tx, vid, emo in ls if vid]
 
 
-SHOW_SCALE, SHOW_Y = 1.75, -70
+SHOW_SCALE, SHOW_Y = 1.15, -12   # 第四輪的立繪本身就是半身（2026-10-18）
 
 
 def _actors(cid, art, era):
     names = [n for n in (LIN, XU, FANG) if any(sp == n for sp, *_ in L[cid])]
     key = {LIN: 'lin', XU: 'xu', FANG: 'fang'}
     slot = {LIN: 'left', XU: 'right', FANG: 'right' if XU not in names else 'center'}
-    # 立繪是全身的，原尺寸放在對話畫面太小、看不到臉；放大成半身（大腿以上），往下推讓腳出框（2026-10-18 作者：看不出立繪）
+    # 對話立繪（p_*）是半身的電影感立繪；稍微放大讓臉更清楚（2026-10-18）
     return [cards.actor(n, art[f'p-{key[n]}-{era}'], slot[n], offsetY=SHOW_Y, scale=SHOW_SCALE) for n in names]
 
 
