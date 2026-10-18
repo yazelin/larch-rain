@@ -6,9 +6,15 @@ import sys, pathlib, subprocess, glob, concurrent.futures as cf
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 R = pathlib.Path(__file__).resolve().parent.parent
 RAW = R / 'art/raw/anchor'
+import os
+SUFFIX = os.environ.get('SUFFIX', '')   # 重產第二輪：SUFFIX=_v2a / _v2b（2026-10-18 作者要求更細緻）
+EXTRA = {}
 CUT = pathlib.Path.home() / '.claude/skills/cutout/cutout.py'
 ORIG = {k: glob.glob(str(R / f'art/original/*sprite_{v}*'))[0] for k, v in (('lin', 'linyu'), ('xu', 'xufan'), ('fang', 'fangcheng'))}
-BASE = ('Full-body standing character portrait for a visual novel, soft cinematic anime illustration, realistic proportions (NOT chibi), '
+BASE = ('Full-body standing character portrait for a premium visual novel, extremely detailed high-end anime illustration: '
+        'fine individual hair strands with soft highlights, detailed eyes with layered irises and catchlights, natural skin shading, '
+        'realistic fabric folds, stitching, seams and texture on every garment, subtle rim light, painterly cel shading with depth, clean confident linework, '
+        'realistic proportions (NOT chibi), '
         'slight three-quarter view facing the viewer, relaxed natural pose, arms at the sides. Keep the face and hairstyle exactly like Reference 1. '
         'Set in Taipei, Taiwan. Solid flat pure magenta #FF00FF background, even lighting, crisp edges, no shadow, no ground, no gradient, '
         'nothing touches the image border. No text, no letters, no logos, no name tag.')
@@ -33,7 +39,7 @@ def gen(name):
     import codex11
     ref, desc = WHO[name]
     return codex11.gen(BASE + ' Reference 1 is the same character (face and hair only; ignore its clothes and dark background). Character: ' + desc,
-                       str(RAW / f'{name}.png'), refs=[ORIG[ref]], size='1024x1536')
+                       str(RAW / f'{name}{SUFFIX}.png'), refs=[ORIG[ref]] + EXTRA.get(name, []), size='1024x1536')
 
 
 def cut(name):

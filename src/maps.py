@@ -36,7 +36,8 @@ def _env(dark, tint, strength, lights, particles=None):
 
 
 def hero(x, y, art, who, d='up'):
-    return ev('hero', x, y, actor='player', direction=d, sprite=walker(art[f'walk-{who}']), actorId='lin')
+    # 引擎用資料庫裡主角的行走圖蓋掉這裡給的（不綁也一樣）；十七歲要穿制服，所以綁資料庫裡另一個角色 lin17（2026-10-18 試玩截圖抓到）
+    return ev('hero', x, y, actor='player', direction=d, sprite=walker(art[f'walk-{who}']), actorId='lin17' if who.endswith('-hs') else 'lin')
 
 
 def fang_now(eid, x, y, art, d='left', **kw):
@@ -95,7 +96,7 @@ def station(art):
     # 靠近公車亭（x=13 那一排）：心跳聲（設計：越靠近，雨聲越小、心跳越清楚）
     for y in range(2, 11):
         if (13, y) != (12, 6):
-            events.append(ev(f'heart{y}', 13, y, name='心跳', trigger='touch', actions=[sound('heartbeat', 0.8)]))
+            events.append(ev(f'heart{y}', 13, y, name='心跳', trigger='touch', actions=[A('sound', audio={'url': '/sfx/heartbeat.mp3', 'volume': 0.8})]))
     # 公車亭前那條線（x=14，人行道到車道）：兩段回憶都走完之前擋住
     for y in list(range(2, 6)) + list(range(7, 11)):
         events.append(ev(f'line{y}', 14, y, name='還不是現在', trigger='touch', solid=True,
@@ -118,7 +119,7 @@ def rooftop17(art):
         hero(*P['hero_start'], art, 'lin-hs'),
         npc('xu17', *P['xu'], walker(art['walk-xu-hs']), direction='down', name='許帆'),
         npc('fang17', *P['fang'], walker(art['walk-fang-hs']), direction='down', name='方澄'),
-        ev('intro17', 1, 11, trigger='auto', once=True, actions=[card('card_r17_intro'), setv('r17', 'locks')]),
+        ev('intro17', 1, 11, trigger='auto', once=True, actions=[A('hero', value='lin17'), card('card_r17_intro'), setv('r17', 'locks')]),   # 切成十七歲的林宇（制服）
         ev('locks17', *P['locks'], name='三把鎖', marker={'label': '三把鎖', 'kind': 'quest'}, conditions=[cond('r17', 'locks')], actions=[
             say('三把鎖掛在鐵絲網上。我的、許帆的、她的。', speaker='player'),
             choice_action('輪到我了。', [
@@ -141,7 +142,7 @@ def rooftop21(art):
         hero(*P['hero_start'], art, 'lin-now'),
         npc('xu21', *P['xu'], walker(art['walk-xu-now']), direction='down', name='許帆'),
         fang_now('fang21', *P['fang'], art, d='down'),
-        ev('intro21', 1, 11, trigger='auto', once=True, actions=[card('card_r21_intro')]),
+        ev('intro21', 1, 11, trigger='auto', once=True, actions=[A('hero', value='lin'), card('card_r21_intro')]),   # 切回二十一歲
         ev('locks21', *P['locks'], name='她的鎖', marker={'label': '她的鎖', 'kind': 'quest'}, conditions=[cond('rooftop_done', False)], actions=[
             say('她那把鎖的鎖孔裡，卡著乾掉的糖。', speaker='player'),
             choice_action('怎麼打開它？', [

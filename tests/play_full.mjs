@@ -32,7 +32,11 @@ const vis = async (t, f0) => { for (const f of f0 ? [f0] : page.frames()) if (aw
 const boxOpen = async () => { for (const f of page.frames()) { const b = f.locator('.vn2-box'); if (await b.count() && await b.first().isVisible().catch(() => false)) return true; } return false; };
 async function inputBox() { for (const f of page.frames()) { const i = f.locator('input[type=text], input:not([type])'); if (await i.count() && await i.first().isVisible().catch(() => false)) return i.first(); } return null; }
 const guided = new Map();
-const clickVisible = async t => { for (const f of page.frames()) { const l = f.getByText(t, { exact: false }).filter({ visible: true }); if (await l.count()) { await l.first().click(); return true; } } return false; };
+// 先點按鈕：選項文字可能也出現在題目裡（「把傘給她」⊂「要把傘給她嗎？」），點到題目會原地繞圈
+const clickVisible = async t => {
+  for (const f of page.frames()) { const b = f.getByRole('button', { name: t }).filter({ visible: true }); if (await b.count()) { await b.first().click(); return true; } }
+  for (const f of page.frames()) { const l = f.getByText(t, { exact: false }).filter({ visible: true }); if (await l.count()) { await l.last().click(); return true; } }
+  return false; };
 try {
   await ui.clickText('開始遊戲'); await sleep(1500);
   const end = Date.now() + 25 * 60000;

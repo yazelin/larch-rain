@@ -12,7 +12,8 @@ def rpg_database(a):
         return {'id': id, 'name': name, 'title': '', 'profile': '', 'role': 'party', 'walk': mapkit.walker(a[f'walk-{who}-now']),
                 'portrait': a[f'p-{who}-now'], 'join': join, 'kit': 'none', 'rig': '', 'joinVariable': ''}
     return {'version': 1, 'heroId': 'lin', 'leadSwitch': False,
-            'actors': [actor('lin', '林宇', 'lin', 'stay'), actor('xu', '許帆', 'xu', 'later'), actor('fang', '方澄', 'fang', 'later')]}
+            'actors': [actor('lin', '林宇', 'lin', 'stay'), actor('xu', '許帆', 'xu', 'later'), actor('fang', '方澄', 'fang', 'later'),
+                       dict(actor('lin17', '林宇（十七歲）', 'lin', 'later'), walk=mapkit.walker(a['walk-lin-hs']), portrait=a['p-lin-hs'])]}
 
 
 CHAR = {
