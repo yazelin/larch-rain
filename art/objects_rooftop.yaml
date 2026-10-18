@@ -1,0 +1,21 @@
+# 高中舊教學大樓頂樓（m-rooftop）：十七歲的夏天（重播）與二十一歲初秋的雨（意識）共用。單位：細格。
+map: {id: m-rooftop, w: 16, h: 12}
+
+ground:
+  - {name: 北側女兒牆, kind: border, rects: [[0, 0, 16, 1]]}
+  - {name: 西側女兒牆, kind: border, rects: [[0, 0, 1, 12]]}
+  - {name: 東側女兒牆, kind: border, rects: [[15, 0, 1, 12]]}
+  - {name: 南側女兒牆, kind: border, rects: [[0, 11, 7, 1], [9, 11, 7, 1]]}
+  - {name: 水泥樓頂, kind: concrete, rects: [[1, 1, 14, 10]]}
+
+objects:
+  - {name: 鐵絲網與鎖, kind: 圍欄, foot: [4, 1, 8, 1], up: 1, desc: 生鏽的鐵絲網，網上掛著三把小鎖}
+  - {name: 鐵皮加蓋, kind: 建築, foot: [1, 2, 3, 2], up: 2, desc: 藍色鐵皮加蓋小屋}
+  - {name: 水塔, kind: 建築, foot: [12, 2, 2, 2], up: 2, desc: 不鏽鋼水塔架}
+
+points:
+  hero_start: [8, 9]
+  locks: [8, 2]
+  xu: [6, 3]
+  fang: [10, 3]
+  stair_door: [8, 11]

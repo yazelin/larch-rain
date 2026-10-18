@@ -1,0 +1,24 @@
+# 捷運出口與公車亭（m-station）：意識裡的雨，傍晚到天亮。單位：細格（48px）。
+# 林宇開場站在柱子西側（11,6），柱子（12,6）擋在他和公車亭之間；公車亭在右側，許帆與方澄站在亭前；兩個水窪是回憶入口。
+map: {id: m-station, w: 22, h: 13}
+
+ground:
+  - {name: 北側大樓立面, kind: border, rects: [[0, 0, 22, 2]]}
+  - {name: 西側牆, kind: border, rects: [[0, 0, 1, 13]]}
+  - {name: 東側牆, kind: border, rects: [[21, 0, 1, 13]]}
+  - {name: 馬路, kind: asphalt, rects: [[0, 10, 22, 3]]}
+  - {name: 馬路不可走, kind: border, rects: [[0, 11, 22, 2]]}
+  - {name: 人行道, kind: sidewalk, rects: [[1, 2, 20, 8]]}
+
+objects:
+  - {name: 捷運出口, kind: 建築, foot: [2, 2, 5, 2], up: 2, desc: 台北捷運出口的玻璃雨棚與往下的電扶梯入口}
+  - {name: 柱子, kind: 柱, foot: [12, 6, 1, 1], up: 3, desc: 騎樓的方形水泥柱}
+  - {name: 公車亭, kind: 建築, foot: [15, 4, 5, 1], up: 3, desc: 台北公車亭，透明頂棚、背板、長椅、中文站牌}
+
+points:
+  hero_start: [11, 6]
+  shelter_xu: [16, 6]
+  shelter_fang: [17, 6]
+  puddle_rooftop: [5, 7]
+  puddle_store: [9, 8]
+

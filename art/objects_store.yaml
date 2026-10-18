@@ -1,0 +1,21 @@
+# 大學旁的二十四小時超商（m-store）：十九歲的雨夜。台灣無品牌超商，中文標示。單位：細格。
+map: {id: m-store, w: 14, h: 10}
+
+ground:
+  - {name: 北牆, kind: border, rects: [[0, 0, 14, 1]]}
+  - {name: 西牆, kind: border, rects: [[0, 0, 1, 10]]}
+  - {name: 東牆, kind: border, rects: [[13, 0, 1, 10]]}
+  - {name: 南側玻璃牆, kind: border, rects: [[0, 9, 6, 1], [8, 9, 6, 1]]}
+  - {name: 磁磚地, kind: tile, rects: [[1, 1, 12, 8]]}
+
+objects:
+  - {name: 冰箱牆, kind: 櫃, foot: [1, 1, 6, 1], up: 1, desc: 一整排飲料冰箱}
+  - {name: 收銀台, kind: 櫃台, foot: [9, 2, 4, 2], up: 1, desc: 收銀台，收銀機、關東煮鍋、茶葉蛋鍋}
+  - {name: 貨架一, kind: 櫃, foot: [2, 4, 2, 3], up: 1, desc: 零食貨架}
+  - {name: 貨架二, kind: 櫃, foot: [5, 4, 2, 3], up: 1, desc: 泡麵貨架}
+
+points:
+  hero_start: [7, 8]
+  register: [10, 4]
+  door: [7, 9]
+  fang_door: [6, 8]
