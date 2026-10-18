@@ -9,8 +9,12 @@ INK = {'#1c2633': '#e9f0ee', '#17212d': '#eef3f1', '#2c3a4b': '#d9e4e1', '#3a485
 FILL = {'#f4f8fb': '#141e25', '#eef4f9': '#18242c', '#ffffff': '#1a262e', '#fff': '#1a262e'}
 
 
-CDN_TAG = re.search(r"CDN_TAG', '([0-9a-f]+)'", (HERE.parent / 'src/push.py').read_text()).group(1)
-RAIN_BGM = f'https://cdn.jsdelivr.net/gh/yazelin/larch-rain@{CDN_TAG}/assets/bgm/rain.mp3'
+# 介面 Skill 的網址只收 R2／larch.ink（jsDelivr 會被擋掉，音效靜音），音訊先用 ui/host_audio.py 傳到 Larch
+import json
+HOSTED = json.loads((HERE / 'hosted.json').read_text())
+RAIN_BGM = HOSTED['bgm-rain']
+# 作者 2026-10-19 選：只換「按下」與「下一句」成水滴（art/sfx_drops.py），滑過／打開／關上／使用道具留晨霧原聲
+SFX = {f'/skills/morning-glass/sfx/{n}.mp3': HOSTED[n] for n in ('press', 'advance')}
 
 CHOICE_FOCUS = '''
 {sel}:is(:hover, :focus-visible):not(:disabled) {{ border-color: var(--mg-deep); background: linear-gradient(100deg, rgba(157, 196, 178, .2), rgba(157, 196, 178, .1)); color: #f2f7f5; outline: none; box-shadow: inset 0 0 0 1px var(--mg-deep), 0 0 16px -4px color-mix(in srgb, var(--skin-accent) 55%, transparent); }}
@@ -54,8 +58,12 @@ def recolor(prop, val):
 def convert(text):
     # 只動宣告（prop: value），註解與 @larch-params 的 JSON 一起轉，預設色也跟著變
     text = text.replace('#8fc3ea', ACCENT).replace('"default": "day"', '"default": "night"')
-    return re.sub(r'(?<![\w-])(--[\w-]+|[a-z-]+)\s*:\s*([^;{}]+?)(?=\s*(;|}|!important))',
+    text = re.sub(r'(?<![\w-])(--[\w-]+|[a-z-]+)\s*:\s*([^;{}]+?)(?=\s*(;|}|!important))',
                   lambda m: f'{m.group(1)}: {recolor(m.group(1), m.group(2))}', text)
+    text = text.replace('https: //', 'https://')   # 上面那條把網址的 https: 也當成宣告，補回來
+    for k, v in SFX.items():   # 網址要在換色之後換，不然一樣被當成宣告
+        text = text.replace(k, v)
+    return text
 
 
 if __name__ == '__main__':

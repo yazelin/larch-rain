@@ -44,3 +44,5 @@ python3 ~/larch-preview/serve.py dist/project.json --port 8799   # 本機預覽
 以 Larch 官方「晨霧玻璃」為底，`ui/night.py` 把 `ui/mist-original/` 轉成深色玻璃＋草木灰綠，輸出到 `ui/rain-night/`，並藏掉這部用不到的 HP、攻防魔、未同行夥伴格與內部變數。
 
 整包推送（`src/push.py`）不會更新介面，要另外跑 `python3 src/push_ui.py` 寫入六個部位並讀回比對。收藏頁（gallery）工具不收，要在編輯器手動換。介面截圖：`node tests/ui_shots.mjs`（`LIVE=<預覽網址>` 截線上版）。
+
+介面 Skill 裡的網址只收 Larch 的 R2、larch.ink、相對路徑（jsDelivr 會被擋掉，音效直接靜音）。介面用到的音訊（按下、下一句的水滴聲 `art/sfx_drops.py`、標題 BGM）先跑 `python3 ui/host_audio.py` 傳到 Larch，網址記在 `ui/hosted.json`，`ui/night.py` 讀它。
