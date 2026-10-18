@@ -16,7 +16,7 @@ BASE = f'https://larch.ink/api/agent/projects/{build.PROJECT_ID}'
 # 用 tag 指向的 commit 編號：新 tag 要等 jsDelivr 刷新版本清單（實測幾分鐘以上回 404），commit 編號馬上能用、一樣固定不變。
 # 這裡是 tag v2d-20261018 的 commit。
 CDN_TAG = os.environ.get('CDN_TAG', '9f5b135ccce5388cfd6121c95bad87445e14cf95')
-CDN = f'https://cdn.jsdelivr.net/gh/yazelin/larch-sunset@{CDN_TAG}/'
+CDN = f'https://cdn.jsdelivr.net/gh/yazelin/larch-rain@{CDN_TAG}/'
 
 
 def to_cdn(project):
