@@ -44,6 +44,7 @@ def build():
     p['settings'].setdefault('plugins', {})['larch-rpg-system'] = {'enabled': True, 'settings': {'database': json.dumps(rpg_database(a), ensure_ascii=False)}}
     p['settings']['titleCoverImage'] = a['cover']
     p['settings']['projectThumbnail'] = a['cover']
+    p['projectThumbnail'] = a['cover']   # 專案最外層也有一份縮圖（原版是日式車站那張）
     if a.get('bgm-rain'):
         p['settings'].setdefault('titleScreen', {})['bgm'] = a['bgm-rain']
     p['settings']['cgGallerySource'] = 'picked'
