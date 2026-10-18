@@ -20,6 +20,7 @@ sys.path.insert(0, H)
 import layout, blocks, codex11
 
 PX = 48
+OUT_PX = 128   # 輸出解析度：每格 128 像素。遊戲照格數決定圖畫多大，圖本身解析度高只會更清楚（2026-10-18 作者：物件解析度很差）
 CUTOUT = os.path.expanduser('~/.claude/skills/cutout/cutout.py')
 RAW = os.path.join(H, 'raw')
 
@@ -117,7 +118,7 @@ def gen_ground(a):
     
     # 縮放成 W * 48 x H * 48 並存為 .webp
     im = Image.open(out_raw).convert('RGB')
-    target_size = (W * PX, Hh * PX)
+    target_size = (W * OUT_PX, Hh * OUT_PX) if im.width >= W * OUT_PX else im.size   # 不縮小：原圖不夠大就保留原圖（原本縮成每格 48 像素，遊戲再放大就糊了）
     im_resized = im.resize(target_size, Image.LANCZOS)
     out_webp = os.path.join(G, f'assets/maps/{a}_ground.webp')
     im_resized.save(out_webp, 'WEBP', quality=95)
@@ -194,7 +195,7 @@ def resize_premul(im, w, h):
 
 def fit_sprite(fig, fw, fh, fill_w=False, plate='green'):
     """縮進圖框 (fw*48, fh*48)：等比縮放、下緣貼齊、水平置中。使用 premultiplied alpha。"""
-    W, Hh = fw * PX, fh * PX
+    W, Hh = fw * OUT_PX, fh * OUT_PX
     if fill_w:
         s = W / fig.width
     else:
@@ -228,7 +229,7 @@ def cut_objects(a):
         canvas = fit_sprite(fig, fw, fh, fill_w=fill_w)
         out_webp = os.path.join(od, f"{o['name']}.webp")
         canvas.save(out_webp, 'WEBP')
-        print(f'Saved object: {out_webp} ({fw*PX}x{fh*PX})')
+        print(f'Saved object: {out_webp} ({fw*OUT_PX}x{fh*OUT_PX})')
 
 
 def process_props():

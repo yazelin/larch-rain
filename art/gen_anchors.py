@@ -9,6 +9,9 @@ RAW = R / 'art/raw/anchor'
 import os
 SUFFIX = os.environ.get('SUFFIX', '')   # 重產第二輪：SUFFIX=_v2a / _v2b（2026-10-18 作者要求更細緻）
 EXTRA = {}
+# 第三輪（2026-10-18 作者：要跟 CG 一樣高質感電影感）：多帶一張同角色的 CG 裁切當畫風參考
+if os.environ.get('CINE'):
+    EXTRA = {n: [str(R / f'art/raw/styleref/{n}.png')] for n in ('lin_now', 'xu_now', 'fang_now', 'lin_hs', 'xu_hs', 'fang_hs')}
 CUT = pathlib.Path.home() / '.claude/skills/cutout/cutout.py'
 ORIG = {k: glob.glob(str(R / f'art/original/*sprite_{v}*'))[0] for k, v in (('lin', 'linyu'), ('xu', 'xufan'), ('fang', 'fangcheng'))}
 BASE = ('Full-body standing character portrait for a premium visual novel, extremely detailed high-end anime illustration: '
@@ -38,7 +41,10 @@ WHO = {
 def gen(name):
     import codex11
     ref, desc = WHO[name]
-    return codex11.gen(BASE + ' Reference 1 is the same character (face and hair only; ignore its clothes and dark background). Character: ' + desc,
+    style = (' Reference 2 is a film still of this same character from our own cinematic CG: match its RENDERING exactly (painterly cinematic anime lighting, '
+             'cool rainy-night key light from one side with a soft rim light, deep but soft shadows, rich hand-painted hair and fabric texture, subtle film-like color grading). '
+             'Take only the painting style and lighting from Reference 2, not its pose, background or framing. The figure must still be cleanly isolated on the flat magenta background.') if os.environ.get('CINE') else ''
+    return codex11.gen(BASE + ' Reference 1 is the same character (face and hair only; ignore its clothes and dark background).' + style + ' Character: ' + desc,
                        str(RAW / f'{name}{SUFFIX}.png'), refs=[ORIG[ref]] + EXTRA.get(name, []), size='1024x1536')
 
 
