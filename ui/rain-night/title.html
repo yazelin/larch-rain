@@ -133,22 +133,12 @@ h1 { margin: 16px 0 0; color: var(--ink); font: 300 clamp(34px, 5vw, 62px)/1.24 
   *, *::before, *::after { animation-duration: 0s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition: none !important; }
   .motes, .glint { display: none; }
 }
-.rays, .motes { display: none !important; }
-.rain { position: absolute; inset: -10% -10% 0; z-index: 2; pointer-events: none; rotate: 8deg; animation: fade calc(2s * var(--t)) ease calc(.8s * var(--t)) both; }
-.rain i { position: absolute; inset: 0; background-image: repeating-linear-gradient(90deg, transparent 0 var(--gap), rgba(210, 232, 236, var(--o)) var(--gap) calc(var(--gap) + 1px)), repeating-linear-gradient(180deg, #000 0 var(--len), transparent var(--len) calc(var(--len) * 2.6));
-  -webkit-mask-image: repeating-linear-gradient(180deg, #000 0 var(--len), transparent var(--len) calc(var(--len) * 2.6)); mask-image: repeating-linear-gradient(180deg, #000 0 var(--len), transparent var(--len) calc(var(--len) * 2.6));
-  background-blend-mode: normal; animation: rainfall var(--d) linear infinite; }
-.rain i:nth-child(1) { --gap: 23px; --len: 34px; --o: .22; --d: .55s; background-size: 100% 100%, 0 0; }
-.rain i:nth-child(2) { --gap: 41px; --len: 60px; --o: .3; --d: .38s; left: 11px; background-size: 100% 100%, 0 0; }
-@keyframes rainfall { from { -webkit-mask-position: 0 0; mask-position: 0 0; } to { -webkit-mask-position: 0 calc(var(--len) * 2.6); mask-position: 0 calc(var(--len) * 2.6); } }
-@media (prefers-reduced-motion: reduce) { .rain i { animation: none; } }
 </style>
 <main class="screen">
   <img class="cover" data-larch-slot="cover" alt="">
   <div class="wash" aria-hidden="true"></div>
   <div class="rays" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   <div class="fog" aria-hidden="true"><i></i><i></i><i></i></div>
-  <div class="rain" aria-hidden="true"><i></i><i></i></div>
   <div class="motes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <div class="stage">
     <section class="card">

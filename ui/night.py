@@ -11,16 +11,6 @@ FILL = {'#f4f8fb': '#141e25', '#eef4f9': '#18242c', '#ffffff': '#1a262e', '#fff'
 
 CDN_TAG = re.search(r"CDN_TAG', '([0-9a-f]+)'", (HERE.parent / 'src/push.py').read_text()).group(1)
 RAIN_BGM = f'https://cdn.jsdelivr.net/gh/yazelin/larch-rain@{CDN_TAG}/assets/bgm/rain.mp3'
-RAIN_CSS = '''.rays, .motes { display: none !important; }
-.rain { position: absolute; inset: -10% -10% 0; z-index: 2; pointer-events: none; rotate: 8deg; animation: fade calc(2s * var(--t)) ease calc(.8s * var(--t)) both; }
-.rain i { position: absolute; inset: 0; background-image: repeating-linear-gradient(90deg, transparent 0 var(--gap), rgba(210, 232, 236, var(--o)) var(--gap) calc(var(--gap) + 1px)), repeating-linear-gradient(180deg, #000 0 var(--len), transparent var(--len) calc(var(--len) * 2.6));
-  -webkit-mask-image: repeating-linear-gradient(180deg, #000 0 var(--len), transparent var(--len) calc(var(--len) * 2.6)); mask-image: repeating-linear-gradient(180deg, #000 0 var(--len), transparent var(--len) calc(var(--len) * 2.6));
-  background-blend-mode: normal; animation: rainfall var(--d) linear infinite; }
-.rain i:nth-child(1) { --gap: 23px; --len: 34px; --o: .22; --d: .55s; background-size: 100% 100%, 0 0; }
-.rain i:nth-child(2) { --gap: 41px; --len: 60px; --o: .3; --d: .38s; left: 11px; background-size: 100% 100%, 0 0; }
-@keyframes rainfall { from { -webkit-mask-position: 0 0; mask-position: 0 0; } to { -webkit-mask-position: 0 calc(var(--len) * 2.6); mask-position: 0 calc(var(--len) * 2.6); } }
-@media (prefers-reduced-motion: reduce) { .rain i { animation: none; } }
-'''
 
 
 def rgba(m, fg):
@@ -82,11 +72,10 @@ if __name__ == '__main__':
             t += ('\n.rpg-pause-menu :is(.pm-health, .pm-health-label, .pm-health-note, .pm-stat-row, .pm-exp, .pm-level, .pm-attributes),'
                   ' .rpg-pause-menu .pm-section-title:has(+ .pm-attributes), .rpg-pause-menu .pm-party-member:disabled,'
                   ' .rpg-pause-menu .pm-locked, body > header .hud-hp, body > header .hud-hp + * { display: none !important; }\n')
-        if f.name == 'title.html':   # 封面特效換成雨：拿掉晨光光束與上飄霧粒，加兩層斜落雨絲；入場白霧與底色改深；標題音樂用自己的雨聲 BGM
+        if f.name == 'title.html':   # 封面特效維持原版光束與霧粒；入場白霧與底色改深；標題音樂用自己的雨聲 BGM
             t = t.replace('#ffe2a8', '#bcd6de').replace('#f1f6fa', '#0b1418').replace('#fff8ea, #e9f0f6 55%, #d9e5ef', '#1a2a33, #101a20 55%, #0b1418')
             t = re.sub(r'("bgm": \{[^}]*"default": ")[^"]*', lambda m: m.group(1) + RAIN_BGM, t)
-            t = t.replace('</style>', RAIN_CSS + '</style>', 1)
-            t = t.replace('<div class="motes"', '<div class="rain" aria-hidden="true"><i></i><i></i></div>\n  <div class="motes"', 1)
+            # ponytail: 試過兩層 CSS 雨絲（見 git 70cc121），作者嫌太規律太像暴雨（2026-10-19），封面維持晨霧原特效
             t = t.replace('In the morning mist', 'In the rain').replace('IN THE MORNING MIST', 'IN THE RAIN')
         if f.name == 'inventory.css':   # 「重要物品」那條引擎預設是淺黃底，深色版上字看不見
             t += '\n[data-larch-ui="detail-effects"] li { background: transparent; border: 0; box-shadow: none; }\n'
