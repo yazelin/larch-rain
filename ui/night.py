@@ -9,6 +9,20 @@ INK = {'#1c2633': '#e9f0ee', '#17212d': '#eef3f1', '#2c3a4b': '#d9e4e1', '#3a485
 FILL = {'#f4f8fb': '#141e25', '#eef4f9': '#18242c', '#ffffff': '#1a262e', '#fff': '#1a262e'}
 
 
+CDN_TAG = re.search(r"CDN_TAG', '([0-9a-f]+)'", (HERE.parent / 'src/push.py').read_text()).group(1)
+RAIN_BGM = f'https://cdn.jsdelivr.net/gh/yazelin/larch-rain@{CDN_TAG}/assets/bgm/rain.mp3'
+RAIN_CSS = '''.rays, .motes { display: none !important; }
+.rain { position: absolute; inset: -10% -10% 0; z-index: 2; pointer-events: none; rotate: 8deg; animation: fade calc(2s * var(--t)) ease calc(.8s * var(--t)) both; }
+.rain i { position: absolute; inset: 0; background-image: repeating-linear-gradient(90deg, transparent 0 var(--gap), rgba(210, 232, 236, var(--o)) var(--gap) calc(var(--gap) + 1px)), repeating-linear-gradient(180deg, #000 0 var(--len), transparent var(--len) calc(var(--len) * 2.6));
+  -webkit-mask-image: repeating-linear-gradient(180deg, #000 0 var(--len), transparent var(--len) calc(var(--len) * 2.6)); mask-image: repeating-linear-gradient(180deg, #000 0 var(--len), transparent var(--len) calc(var(--len) * 2.6));
+  background-blend-mode: normal; animation: rainfall var(--d) linear infinite; }
+.rain i:nth-child(1) { --gap: 23px; --len: 34px; --o: .22; --d: .55s; background-size: 100% 100%, 0 0; }
+.rain i:nth-child(2) { --gap: 41px; --len: 60px; --o: .3; --d: .38s; left: 11px; background-size: 100% 100%, 0 0; }
+@keyframes rainfall { from { -webkit-mask-position: 0 0; mask-position: 0 0; } to { -webkit-mask-position: 0 calc(var(--len) * 2.6); mask-position: 0 calc(var(--len) * 2.6); } }
+@media (prefers-reduced-motion: reduce) { .rain i { animation: none; } }
+'''
+
+
 def rgba(m, fg):
     r, g, b, a = m.group(1), m.group(2), m.group(3), float(m.group(4))
     rgb = (int(r), int(g), int(b))
@@ -54,13 +68,25 @@ if __name__ == '__main__':
     OUT.mkdir(exist_ok=True)
     for f in SRC.iterdir():
         t = convert(f.read_text())
-        if f.name == 'dialogue.html':   # 玻璃上的雨痕：很淡的斜線疊在深玻璃上
+        if f.name == 'dialogue.html':   # 玻璃上的雨痕：很淡的斜線疊在深玻璃上；作者要再透一點
+            t = t.replace('"default": 20 }', '"default": 8 }')
+            t = t.replace('</style>', ':root, html[data-skin-tone="night"] { --glass-a: rgba(17, 27, 34, .5); --glass-b: rgba(17, 27, 34, .4); --skin-blur: 8px; }\n.text { text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }\n</style>', 1)
             t = t.replace('</style>', '.box { background: repeating-linear-gradient(102deg, transparent 0 26px, rgba(200, 228, 218, .04) 26px 27px), linear-gradient(170deg, var(--glass-a), var(--glass-b)); }\n</style>', 1)
+        if f.name == 'rpg.css':   # 官方原檔把 .rpg-waypoint:hover 也寫進 transform: none，引擎靠 transform 置中標籤，hover 會跳位
+            t = t.replace(', .rpg-waypoint:hover,', ',', 1)
+            t += '\n.rpg-waypoint:hover { border-color: var(--mg-deep); background: #1a262e; color: var(--mg-deep); box-shadow: none; }\n'
+        if f.name == 'rpg.css':   # 地圖對話框再透一點；「這裡走不過去」提示原本疊在左上任務卡上，移到上方正中
+            t += ('\n#dialogue .dlg-box { background: linear-gradient(170deg, rgba(17, 27, 34, .5), rgba(17, 27, 34, .4)); -webkit-backdrop-filter: blur(8px) saturate(1.3); backdrop-filter: blur(8px) saturate(1.3); text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }'
+                  '\n#notice { position: fixed !important; top: 84px !important; left: 50% !important; right: auto !important; bottom: auto !important; translate: -50% 0; }\n')
         if f.name == 'rpg.css':   # 這部沒有戰鬥：藏掉 HP、攻防魔、經驗、沒同行的夥伴格、內部變數
             t += ('\n.rpg-pause-menu :is(.pm-health, .pm-health-label, .pm-health-note, .pm-stat-row, .pm-exp, .pm-level, .pm-attributes),'
                   ' .rpg-pause-menu .pm-section-title:has(+ .pm-attributes), .rpg-pause-menu .pm-party-member:disabled,'
                   ' .rpg-pause-menu .pm-locked, body > header .hud-hp, body > header .hud-hp + * { display: none !important; }\n')
-        if f.name == 'title.html':
+        if f.name == 'title.html':   # 封面特效換成雨：拿掉晨光光束與上飄霧粒，加兩層斜落雨絲；入場白霧與底色改深；標題音樂用自己的雨聲 BGM
+            t = t.replace('#ffe2a8', '#bcd6de').replace('#f1f6fa', '#0b1418').replace('#fff8ea, #e9f0f6 55%, #d9e5ef', '#1a2a33, #101a20 55%, #0b1418')
+            t = re.sub(r'("bgm": \{[^}]*"default": ")[^"]*', lambda m: m.group(1) + RAIN_BGM, t)
+            t = t.replace('</style>', RAIN_CSS + '</style>', 1)
+            t = t.replace('<div class="motes"', '<div class="rain" aria-hidden="true"><i></i><i></i></div>\n  <div class="motes"', 1)
             t = t.replace('In the morning mist', 'In the rain').replace('IN THE MORNING MIST', 'IN THE RAIN')
         if f.name == 'inventory.css':   # 「重要物品」那條引擎預設是淺黃底，深色版上字看不見
             t += '\n[data-larch-ui="detail-effects"] li { background: transparent; border: 0; box-shadow: none; }\n'

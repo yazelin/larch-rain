@@ -30,7 +30,10 @@ def build():
     p = json.loads((ROOT / 'skeleton/project.json').read_text(encoding='utf-8'))
     a = art.paths()
     board = p['boards'][0]
-    board['description'] = '捷運站外的雨、十七歲的頂樓、十九歲的超商，在林宇的意識裡，兩個結局。'
+    # 標題卡片上那段簡介讀的是 project.description（原版文案沒跟上重寫）
+    p['description'] = ('最後一晚，林宇、許帆和方澄在捷運站外的公車亭等天亮的首班車。林宇的背包裡有一封三年沒拆的信。'
+                        '雨一直下，他的意識一次次被拉回十七歲的頂樓、十九歲的超商，回到每一個沒說出口的時刻。')
+    board['description'] ='捷運站外的雨、十七歲的頂樓、十九歲的超商，在林宇的意識裡，兩個結局。'
     board['nodes'], board['edges'] = [], []
     p['nodes'], p['edges'] = board['nodes'], board['edges']
     p['variables'] = variables.project_variables()

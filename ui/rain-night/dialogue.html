@@ -2,7 +2,7 @@
 {
   "tone": { "type": "select", "label": "色調", "labelEn": "Tone", "options": [{ "value": "day", "label": "晨霧（亮）", "labelEn": "Day (light)" }, { "value": "night", "label": "夜霧（深）", "labelEn": "Night (dark)" }], "default": "night" },
   "accent": { "type": "color", "label": "霧藍重點色", "labelEn": "Mist accent", "default": "#9dc4b2" },
-  "blur": { "type": "range", "label": "霧化程度", "labelEn": "Blur", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 20 },
+  "blur": { "type": "range", "label": "霧化程度", "labelEn": "Blur", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 8 },
   "advance": { "type": "audio", "kind": "sfx", "label": "下一句音效", "labelEn": "Next line sound", "default": "/skills/morning-glass/sfx/advance.mp3" }
 }
 </script>
@@ -30,6 +30,8 @@ html:not([data-has-speaker]) .text { color: var(--soft); }
 @keyframes sink { 0%, 100% { translate: 0 0; } 50% { translate: 0 3px; } }
 @media (max-width: 640px) { body { padding: 6px 6px 6px; } .box { min-height: 136px; padding: 18px 18px 22px; border-radius: 20px; } .name::after { width: 60px; } .text { font-size: max(17px, var(--larch-text-size, 22px)); padding-right: 30px; } .next { right: 12px; bottom: 12px; } }
 @media (prefers-reduced-motion: reduce) { .next::after { animation: none; } .next { transition: none; } }
+:root, html[data-skin-tone="night"] { --glass-a: rgba(17, 27, 34, .5); --glass-b: rgba(17, 27, 34, .4); --skin-blur: 8px; }
+.text { text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
 .box { background: repeating-linear-gradient(102deg, transparent 0 26px, rgba(200, 228, 218, .04) 26px 27px), linear-gradient(170deg, var(--glass-a), var(--glass-b)); }
 </style>
 <section class="box" aria-label="對話">
