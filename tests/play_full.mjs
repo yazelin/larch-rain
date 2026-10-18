@@ -37,6 +37,8 @@ const clickVisible = async t => {
   for (const f of page.frames()) { const b = f.getByRole('button', { name: t }).filter({ visible: true }); if (await b.count()) { await b.first().click(); return true; } }
   for (const f of page.frames()) { const l = f.getByText(t, { exact: false }).filter({ visible: true }); if (await l.count()) { await l.last().click(); return true; } }
   return false; };
+// 截圖前先 hover 要點的選項，順便留下選項選中狀態的畫面（外框壞過一次）
+const hoverVisible = async t => { for (const f of page.frames()) { const b = f.getByRole('button', { name: t }).filter({ visible: true }); if (await b.count()) { await b.first().hover(); return; } } };
 try {
   await ui.clickText('開始遊戲'); await sleep(1500);
   const end = Date.now() + 25 * 60000;
@@ -48,7 +50,7 @@ try {
     if (inp) { await inp.fill('0217'); await page.keyboard.press('Enter'); await sleep(800); continue; }
     const q = Object.keys(CHOICES).find(k => t.includes(k));
     const pick = q && (Array.isArray(CHOICES[q]) ? CHOICES[q][Math.min(used[q] || 0, CHOICES[q].length - 1)] : CHOICES[q]);
-    if (q && await vis(pick)) { await shot(); await clickVisible(pick); used[q] = (used[q] || 0) + 1; await sleep(700); continue; }
+    if (q && await vis(pick)) { await hoverVisible(pick); await sleep(400); await shot(); await clickVisible(pick); used[q] = (used[q] || 0) + 1; await sleep(700); continue; }
     if (q) { await sleep(300); continue; }
     // 翻頁前後各讀一次：Larch 本站比較慢，長句打字還沒完就翻過去會漏讀
     if (await boxOpen()) { await sleep(300); seen += await text(); await ui.advance(); await sleep(700); seen += await text(); continue; }

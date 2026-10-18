@@ -32,6 +32,7 @@ html:not([data-has-speaker]) .text { color: var(--soft); }
 @media (prefers-reduced-motion: reduce) { .next::after { animation: none; } .next { transition: none; } }
 :root, html[data-skin-tone="night"] { --glass-a: rgba(17, 27, 34, .5); --glass-b: rgba(17, 27, 34, .4); --skin-blur: 8px; }
 .text { text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+body, html body { padding: 8px clamp(16px, 4vw, 64px) clamp(12px, 2.4vh, 24px) !important; }
 .box { background: repeating-linear-gradient(102deg, transparent 0 26px, rgba(200, 228, 218, .04) 26px 27px), linear-gradient(170deg, var(--glass-a), var(--glass-b)); }
 </style>
 <section class="box" aria-label="對話">

@@ -12,6 +12,10 @@ FILL = {'#f4f8fb': '#141e25', '#eef4f9': '#18242c', '#ffffff': '#1a262e', '#fff'
 CDN_TAG = re.search(r"CDN_TAG', '([0-9a-f]+)'", (HERE.parent / 'src/push.py').read_text()).group(1)
 RAIN_BGM = f'https://cdn.jsdelivr.net/gh/yazelin/larch-rain@{CDN_TAG}/assets/bgm/rain.mp3'
 
+CHOICE_FOCUS = '''
+{sel}:is(:hover, :focus-visible):not(:disabled) {{ border-color: var(--mg-deep); background: linear-gradient(100deg, rgba(157, 196, 178, .2), rgba(157, 196, 178, .1)); color: #f2f7f5; outline: none; box-shadow: inset 0 0 0 1px var(--mg-deep), 0 0 16px -4px color-mix(in srgb, var(--skin-accent) 55%, transparent); }}
+'''
+
 
 def rgba(m, fg):
     r, g, b, a = m.group(1), m.group(2), m.group(3), float(m.group(4))
@@ -58,15 +62,16 @@ if __name__ == '__main__':
     OUT.mkdir(exist_ok=True)
     for f in SRC.iterdir():
         t = convert(f.read_text())
-        if f.name == 'dialogue.html':   # 玻璃上的雨痕：很淡的斜線疊在深玻璃上；作者要再透一點
+        if f.name == 'dialogue.html':   # 玻璃上的雨痕：很淡的斜線疊在深玻璃上；作者要再透一點、左下右留空間
             t = t.replace('"default": 20 }', '"default": 8 }')
-            t = t.replace('</style>', ':root, html[data-skin-tone="night"] { --glass-a: rgba(17, 27, 34, .5); --glass-b: rgba(17, 27, 34, .4); --skin-blur: 8px; }\n.text { text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }\n</style>', 1)
+            t = t.replace('</style>', ':root, html[data-skin-tone="night"] { --glass-a: rgba(17, 27, 34, .5); --glass-b: rgba(17, 27, 34, .4); --skin-blur: 8px; }\n.text { text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }\nbody, html body { padding: 8px clamp(16px, 4vw, 64px) clamp(12px, 2.4vh, 24px) !important; }\n</style>', 1)
             t = t.replace('</style>', '.box { background: repeating-linear-gradient(102deg, transparent 0 26px, rgba(200, 228, 218, .04) 26px 27px), linear-gradient(170deg, var(--glass-a), var(--glass-b)); }\n</style>', 1)
         if f.name == 'rpg.css':   # 官方原檔把 .rpg-waypoint:hover 也寫進 transform: none，引擎靠 transform 置中標籤，hover 會跳位
             t = t.replace(', .rpg-waypoint:hover,', ',', 1)
             t += '\n.rpg-waypoint:hover { border-color: var(--mg-deep); background: #1a262e; color: var(--mg-deep); box-shadow: none; }\n'
-        if f.name == 'rpg.css':   # 地圖對話框再透一點；「這裡走不過去」提示原本疊在左上任務卡上，移到上方正中
+        if f.name == 'rpg.css':   # 地圖對話框再透一點、離左下右留空間（作者：不要貼齊）；「這裡走不過去」提示原本疊在左上任務卡上，移到上方正中
             t += ('\n#dialogue .dlg-box { background: linear-gradient(170deg, rgba(17, 27, 34, .5), rgba(17, 27, 34, .4)); -webkit-backdrop-filter: blur(8px) saturate(1.3); backdrop-filter: blur(8px) saturate(1.3); text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }'
+                  '\n#dialogue .dlg-box { width: auto !important; margin-left: clamp(16px, 4vw, 64px) !important; margin-right: clamp(16px, 4vw, 64px) !important; margin-bottom: clamp(12px, 2.4vh, 24px) !important; }'
                   '\n#notice { position: fixed !important; top: 84px !important; left: 50% !important; right: auto !important; bottom: auto !important; translate: -50% 0; }\n')
         if f.name == 'rpg.css':   # 這部沒有戰鬥：藏掉 HP、攻防魔、經驗、沒同行的夥伴格、內部變數
             t += ('\n.rpg-pause-menu :is(.pm-health, .pm-health-label, .pm-health-note, .pm-stat-row, .pm-exp, .pm-level, .pm-attributes),'
@@ -77,6 +82,11 @@ if __name__ == '__main__':
             t = re.sub(r'("bgm": \{[^}]*"default": ")[^"]*', lambda m: m.group(1) + RAIN_BGM, t)
             # ponytail: 試過兩層 CSS 雨絲（見 git 70cc121），作者嫌太規律太像暴雨（2026-10-19），封面維持晨霧原特效
             t = t.replace('In the morning mist', 'In the rain').replace('IN THE MORNING MIST', 'IN THE RAIN')
+        # 選項選中：原版是亮底白光圈＋外推 3px 的 outline，轉深色後圈變暗、又被對話框切掉，改成貼邊亮框
+        if f.name == 'rpg.css':
+            t += CHOICE_FOCUS.format(sel='#dialogue :is(.dialogue-actions button, .dlg-choice)')
+        if f.name == 'choices.css':
+            t += CHOICE_FOCUS.format(sel='[data-larch-ui="choice"]')
         if f.name == 'inventory.css':   # 「重要物品」那條引擎預設是淺黃底，深色版上字看不見
             t += '\n[data-larch-ui="detail-effects"] li { background: transparent; border: 0; box-shadow: none; }\n'
         (OUT / f.name).write_text(t)
