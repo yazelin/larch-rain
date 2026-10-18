@@ -51,6 +51,10 @@ def build():
     p['settings']['cgGalleryItems'] = [{'url': a[k], 'title': t} for k, t in (
         ('cover', '淡藍與草木灰綠的雨幕'), ('cg-locks', '三把鎖'), ('cg-store', '抽回的傘柄'), ('cg-crane', '一聲對不起'),
         ('cg-letter', '給林宇、許帆'), ('cg-end-a', '各自的公車'), ('cg-end-b', '雨不會停')) if a[k] != a['bg-black']]
+    # 介面：官方晨霧玻璃轉成雨夜版（ui/night.py）。專案 PUT 會整份覆蓋，所以介面也要從這裡帶
+    skin = {'id': 'skill-morning-glass', 'name': '晨霧玻璃', 'author': 'Larch', 'version': '1.1', 'official': True}
+    p['settings']['customInterfaces'] = {f.stem: {'html': f.read_text(encoding='utf-8'), 'enabled': True, 'skin': skin}
+                                         for f in sorted((ROOT / 'ui/rain-night').iterdir())}
     p['settings']['menuUi'] = {'preset': 'night', 'accent': '#8fbfa8', 'title': '淡藍與草木灰綠的雨幕', 'eyebrow': '林宇的意識裡', 'buttons': ['bag', 'save', 'load', 'title']}
 
     N = board['nodes'].append

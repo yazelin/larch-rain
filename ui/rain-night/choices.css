@@ -1,0 +1,23 @@
+/* @larch-params {
+  "accent": { "type": "color", "label": "霧藍重點色", "labelEn": "Mist accent", "default": "#9dc4b2" },
+  "hover": { "type": "audio", "kind": "sfx", "label": "滑過選項音效", "labelEn": "Choice hover sound", "default": "/skills/morning-glass/sfx/hover.mp3" },
+  "select": { "type": "audio", "kind": "sfx", "label": "選定選項音效", "labelEn": "Choice pick sound", "default": "/skills/morning-glass/sfx/press.mp3" }
+} */
+/* 選項：一顆顆霧面玻璃膠囊，編號用細明體、和文字之間一條髮絲線。 */
+:scope { --mg-deep: color-mix(in srgb, var(--skin-accent, #9dc4b2) 72%, #1a262e); --mg-ink: #e9f0ee; --mg-soft: #c3d1ce; --mg-mute: #98aaa7; --mg-ctl: #7f9895; --mg-line: rgba(196, 226, 214, 0.16); --mg-edge: rgba(200, 228, 218, .2); --mg-glass: linear-gradient(165deg, rgba(17, 27, 34, 0.75), rgba(17, 27, 34, 0.68)); --mg-shadow: 0 26px 64px -18px rgba(0, 6, 10, 0.59), 0 6px 18px rgba(0, 6, 10, 0.35); gap: 12px; }
+:scope.vn2-choices-floating { padding: 0; border: 0; background: none; box-shadow: none; backdrop-filter: none; }
+[data-larch-ui="choice"] { position: relative; min-height: 54px; padding: 12px 26px 12px 22px; gap: 16px; overflow: hidden; border: 1px solid var(--mg-edge); border-radius: 999px; background: linear-gradient(100deg, rgba(17, 27, 34, 0.73), rgba(17, 27, 34, 0.65)); color: var(--mg-ink); box-shadow: inset 0 0 0 1px rgba(196, 226, 214, 0.22), 0 12px 30px -10px rgba(0, 6, 10, 0.55); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif; font-size: 16px; font-weight: 600; letter-spacing: .04em; text-shadow: none; transition: background .22s, box-shadow .22s, color .22s, transform .22s; }
+[data-larch-ui="choice"]::after { position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(17, 27, 34, 0.77) 50%, transparent 70%); content: ""; translate: -110% 0; transition: translate .6s ease; pointer-events: none; }
+[data-larch-ui="choice-index"] { flex: none; padding-right: 14px; border-right: 1px solid rgba(196, 226, 214, 0.28); color: var(--mg-deep); font-family: "Noto Serif TC", "Songti TC", "Source Han Serif TC", "PMingLiU", Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: .12em; }
+[data-larch-ui="choice-text"] { text-align: left; }
+[data-larch-ui="choice-arrow"] { color: var(--mg-deep); opacity: .8; transition: translate .22s, opacity .22s; }
+[data-larch-ui="choice"]:hover, [data-larch-ui="choice"]:focus-visible { background: linear-gradient(100deg, #1a262e, rgba(17, 27, 34, 0.82)); color: var(--mg-ink); outline: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mg-deep) 45%, transparent), 0 0 0 4px rgba(17, 27, 34, 0.38), 0 16px 34px -10px rgba(0, 6, 10, 0.61); transform: translateX(4px); }
+[data-larch-ui="choice"]:hover::after, [data-larch-ui="choice"]:focus-visible::after { translate: 110% 0; }
+[data-larch-ui="choice"]:hover [data-larch-ui="choice-arrow"], [data-larch-ui="choice"]:focus-visible [data-larch-ui="choice-arrow"] { opacity: 1; translate: 4px 0; }
+[data-larch-ui="choice"]:focus-visible { box-shadow: inset 0 0 0 1px var(--mg-deep), 0 0 0 2px #1a262e, 0 0 0 4px var(--mg-deep), 0 16px 34px -10px rgba(0, 6, 10, 0.61); }
+[data-larch-ui="choice"]:active { background: color-mix(in srgb, var(--skin-accent) 20%, #1a262e); transform: translateX(4px) scale(.99); }
+[data-larch-ui="choice"]:disabled { border: 1px dashed var(--mg-ctl); background: rgba(17, 27, 34, 0.63); color: var(--mg-mute); box-shadow: none; cursor: not-allowed; transform: none; }
+[data-larch-ui="choice"]:disabled::after { display: none; }
+[data-larch-ui="choice"]:disabled [data-larch-ui="choice-index"], [data-larch-ui="choice"]:disabled [data-larch-ui="choice-arrow"] { color: var(--mg-mute); }
+@media (max-width: 640px) { [data-larch-ui="choice"] { min-height: 50px; padding: 10px 20px 10px 18px; gap: 12px; font-size: 15px; } [data-larch-ui="choice-index"] { padding-right: 10px; } }
+@media (prefers-reduced-motion: reduce) { [data-larch-ui="choice"], [data-larch-ui="choice"]::after, [data-larch-ui="choice-arrow"] { transition: none; } [data-larch-ui="choice"]:is(:hover, :focus-visible, :active) { transform: none; } }

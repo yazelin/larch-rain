@@ -38,3 +38,9 @@ python3 ~/larch-preview/serve.py dist/project.json --port 8799   # 本機預覽
 
 - 程式碼：MIT © 林亞澤（`LICENSE`）；故事、美術、配樂與配音：CC BY-NC 4.0（`LICENSE-CONTENT.md`）
 - [GitHub @yazelin](https://github.com/yazelin) · [Facebook](https://facebook.com/yazelin) · [Buy Me a Coffee](https://buymeacoffee.com/yazelin)
+
+## 介面（雨夜玻璃）
+
+以 Larch 官方「晨霧玻璃」為底，`ui/night.py` 把 `ui/mist-original/` 轉成深色玻璃＋草木灰綠，輸出到 `ui/rain-night/`，並藏掉這部用不到的 HP、攻防魔、未同行夥伴格與內部變數。
+
+整包推送（`src/push.py`）不會更新介面，要另外跑 `python3 src/push_ui.py` 寫入六個部位並讀回比對。收藏頁（gallery）工具不收，要在編輯器手動換。介面截圖：`node tests/ui_shots.mjs`（`LIVE=<預覽網址>` 截線上版）。
