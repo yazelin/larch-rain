@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.DS_Store
+art/**/*.png
+art/**/*.json
+art/raw/
+art/check/
+art/original/
+dist/assets/
+dist/feedback/
+/dist/project-larch.json
