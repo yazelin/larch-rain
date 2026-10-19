@@ -15,7 +15,7 @@ BASE = f'https://larch.ink/api/agent/projects/{build.PROJECT_ID}'
 # 改了素材要先 commit、推 main、打新 tag，再改這裡。
 # 用 tag 指向的 commit 編號：新 tag 要等 jsDelivr 刷新版本清單（實測幾分鐘以上回 404），commit 編號馬上能用、一樣固定不變。
 # 這裡是 tag v2b-20261018 的 commit。
-CDN_TAG = os.environ.get('CDN_TAG', 'b928bb412bd588ed13eeef827b0aed97ede97cf0')
+CDN_TAG = os.environ.get('CDN_TAG', '3a34821be85a813eb32ca07826cded2967972728')
 CDN = f'https://cdn.jsdelivr.net/gh/yazelin/larch-rain@{CDN_TAG}/'
 
 
@@ -75,7 +75,7 @@ def merge_settings(online, built):
     rpg = plugins.setdefault('larch-rpg-system', {'enabled': True, 'settings': {}})
     rpg['enabled'] = True
     rpg.setdefault('settings', {})['database'] = built['settings']['plugins']['larch-rpg-system']['settings']['database']
-    for k in ('titleCoverImage', 'projectThumbnail', 'cgGallerySource', 'cgGalleryItems', 'menuUi', 'battleUi'):
+    for k in ('titleCoverImage', 'projectThumbnail', 'cgGalleryEnabled', 'cgGallerySource', 'cgGalleryItems', 'menuUi', 'battleUi'):   # 介面 customInterfaces 不在這裡，沿用線上（收藏頁靠編輯器匯入，不能蓋掉）
         if k in built.get('settings', {}):
             m[k] = built['settings'][k]
     if (built.get('settings', {}).get('titleScreen') or {}).get('bgm'):
