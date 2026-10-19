@@ -1,5 +1,5 @@
 /* @larch-params {
-  "accent": { "type": "color", "label": "霧藍重點色", "labelEn": "Mist accent", "default": "#9dc4b2" }
+  "accent": { "type": "color", "label": "草木灰綠重點色", "labelEn": "Mist accent", "default": "#9dc4b2" }
 } */
 /* RPG 擴充功能的每個畫面：極簡的玻璃狀態列、地圖對話、暫停選單（上方分段導覽）、戰鬥（底部一排玻璃指令、左上角隊伍小卡）、商店、取名與轉盤。 */
 :root { --mg-deep: color-mix(in srgb, var(--skin-accent, #9dc4b2) 72%, #1a262e); --mg-ink: #e9f0ee; --mg-soft: #c3d1ce; --mg-mute: #98aaa7; --mg-ctl: #7f9895; --mg-line: rgba(196, 226, 214, 0.16); --mg-edge: rgba(200, 228, 218, .2); --mg-glass: linear-gradient(165deg, rgba(17, 27, 34, 0.75), rgba(17, 27, 34, 0.68)); --mg-shadow: 0 26px 64px -18px rgba(0, 6, 10, 0.59), 0 6px 18px rgba(0, 6, 10, 0.35); --mg-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif; --mg-serif: "Noto Serif TC", "Songti TC", "Source Han Serif TC", "PMingLiU", Georgia, serif; --surface: #141e25 !important; --ink: #e9f0ee !important; --fg: #e9f0ee !important; --muted: #c3d1ce !important; --line: #7f9895 !important; --control: #1a262e !important; --strong: var(--mg-deep) !important; --strong-fg: #0e171c !important; --focus: var(--mg-deep) !important; }

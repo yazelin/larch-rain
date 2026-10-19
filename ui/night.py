@@ -30,9 +30,9 @@ def rgba(m, fg):
         if a >= .45:
             return f'rgba(17, 27, 34, {round(min(.9, a * .85), 2)})'
         return f'rgba(200, 228, 218, {round(a * .45, 3)})'   # 淡的亮邊、反光 → 淡綠灰邊
-    if rgb == (40, 64, 92):                           # 深色細線
+    if rgb in ((40, 64, 92), (28, 38, 51), (40, 70, 104)):   # 深色細線（標題卡用的是後兩種）
         return f'rgba(196, 226, 214, {a})'
-    if rgb == (30, 52, 80):                           # 陰影
+    if rgb in ((30, 52, 80), (30, 54, 84)):          # 陰影
         return f'rgba(0, 6, 10, {round(min(.85, a + .25), 2)})'
     return m.group(0)
 
@@ -70,6 +70,8 @@ if __name__ == '__main__':
     OUT.mkdir(exist_ok=True)
     for f in SRC.iterdir():
         t = convert(f.read_text())
+        for x, y in (('霧藍重點色', '草木灰綠重點色'),):
+            t = t.replace(f'"label": "{x}"', f'"label": "{y}"')
         if f.name == 'dialogue.html':   # 玻璃上的雨痕：很淡的斜線疊在深玻璃上；作者要再透一點、左下右留空間
             t = t.replace('"default": 20 }', '"default": 8 }')
             t = t.replace('</style>', ':root, html[data-skin-tone="night"] { --glass-a: rgba(17, 27, 34, .5); --glass-b: rgba(17, 27, 34, .4); --skin-blur: 8px; }\n.text { text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }\nbody, html body { padding: 8px clamp(16px, 4vw, 64px) clamp(12px, 2.4vh, 24px) !important; }\n</style>', 1)
@@ -85,6 +87,10 @@ if __name__ == '__main__':
             t += ('\n.rpg-pause-menu :is(.pm-health, .pm-health-label, .pm-health-note, .pm-stat-row, .pm-exp, .pm-level, .pm-attributes),'
                   ' .rpg-pause-menu .pm-section-title:has(+ .pm-attributes), .rpg-pause-menu .pm-party-member:disabled,'
                   ' .rpg-pause-menu .pm-locked, body > header .hud-hp, body > header .hud-hp + * { display: none !important; }\n')
+        if f.name == 'title.html':   # 霧粒、霧帶原本是白的，被當成玻璃面轉深會變成暗影，改回淡淡的亮霧；參數名稱換成這部的說法
+            t = t.replace('</style>', '.fog i { background: radial-gradient(closest-side, rgba(200, 222, 226, .16), rgba(200, 222, 226, 0)); }\n.motes i { background: radial-gradient(circle, rgba(214, 232, 236, .55) 0 28%, rgba(214, 232, 236, 0) 70%); }\n</style>', 1)
+            for x, y in (('霧藍重點色', '草木灰綠重點色'), ('晨光顏色', '光暈顏色'), ('晨霧濃度', '雨霧濃度'), ('晨光光束', '光束')):
+                t = t.replace(f'"label": "{x}"', f'"label": "{y}"')
         if f.name == 'title.html':   # 封面特效維持原版光束與霧粒；入場白霧與底色改深；標題音樂用自己的雨聲 BGM
             t = t.replace('#ffe2a8', '#bcd6de').replace('#f1f6fa', '#0b1418').replace('#fff8ea, #e9f0f6 55%, #d9e5ef', '#1a2a33, #101a20 55%, #0b1418')
             t = re.sub(r'("bgm": \{[^}]*"default": ")[^"]*', lambda m: m.group(1) + RAIN_BGM, t)

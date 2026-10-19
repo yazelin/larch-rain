@@ -1,5 +1,5 @@
 /* @larch-params {
-  "accent": { "type": "color", "label": "霧藍重點色", "labelEn": "Mist accent", "default": "#9dc4b2" },
+  "accent": { "type": "color", "label": "草木灰綠重點色", "labelEn": "Mist accent", "default": "#9dc4b2" },
   "open": { "type": "audio", "kind": "sfx", "label": "點選章節音效", "labelEn": "Chapter open sound", "default": "/skills/morning-glass/sfx/open.mp3" },
   "hover": { "type": "audio", "kind": "sfx", "label": "滑過收藏音效", "labelEn": "Gallery hover sound", "default": "/skills/morning-glass/sfx/hover.mp3" }
 } */
