@@ -68,4 +68,5 @@
   [data-larch-ui="chapter-grid"] { gap: 14px; padding: 18px 16px 28px; }
   [data-larch-ui="chapter"] { width: 76vw; }
 }
-@media (prefers-reduced-motion: reduce) { [data-larch-ui="cg"], [data-larch-ui="chapter"], [data-larch-ui="chapter"]::after { transition: none; } }
+@media (prefers-reduced-motion: reduce) { [data-larch-ui="cg"], [data-larch-ui="chapter"], [data-larch-ui="chapter"]::after { transition: none; } }:scope { background: radial-gradient(ellipse 50% 45% at 88% 0%, rgba(188, 214, 222, .14), transparent 70%), radial-gradient(ellipse 60% 55% at 0% 100%, color-mix(in srgb, var(--skin-accent) 18%, transparent), transparent 70%), repeating-linear-gradient(90deg, rgba(200, 228, 218, .05) 0 1px, transparent 1px 160px), linear-gradient(180deg, #16222a, #0f1a20 70%, #0b1418) !important; }
+:scope[data-larch-ui="gallery"] > header { border-bottom-color: rgba(200, 228, 218, .14); background: rgba(14, 22, 28, .6); }

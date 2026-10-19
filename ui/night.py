@@ -101,6 +101,11 @@ if __name__ == '__main__':
             t += CHOICE_FOCUS.format(sel='#dialogue :is(.dialogue-actions button, .dlg-choice)')
         if f.name == 'choices.css':
             t += CHOICE_FOCUS.format(sel='[data-larch-ui="choice"]')
+        if f.name == 'gallery.css':   # 收藏頁底色原版用的亮色不在換色表裡，整片蓋成深色雨夜
+            t += (':scope { background: radial-gradient(ellipse 50% 45% at 88% 0%, rgba(188, 214, 222, .14), transparent 70%), '
+                  'radial-gradient(ellipse 60% 55% at 0% 100%, color-mix(in srgb, var(--skin-accent) 18%, transparent), transparent 70%), '
+                  'repeating-linear-gradient(90deg, rgba(200, 228, 218, .05) 0 1px, transparent 1px 160px), linear-gradient(180deg, #16222a, #0f1a20 70%, #0b1418) !important; }\n'
+                  ':scope[data-larch-ui="gallery"] > header { border-bottom-color: rgba(200, 228, 218, .14); background: rgba(14, 22, 28, .6); }\n')
         if f.name == 'inventory.css':   # 「重要物品」那條引擎預設是淺黃底，深色版上字看不見
             t += '\n[data-larch-ui="detail-effects"] li { background: transparent; border: 0; box-shadow: none; }\n'
         (OUT / f.name).write_text(t)

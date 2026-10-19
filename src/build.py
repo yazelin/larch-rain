@@ -50,13 +50,14 @@ def build():
     p['projectThumbnail'] = a['cover']   # 專案最外層也有一份縮圖（原版是日式車站那張）
     if a.get('bgm-rain'):
         p['settings'].setdefault('titleScreen', {})['bgm'] = a['bgm-rain']
+    p['settings']['cgGalleryEnabled'] = True   # 原版骨架是關的，標題的「CG 收藏」按鈕被藏起來（2026-10-19 作者要打開）
     p['settings']['cgGallerySource'] = 'picked'
-    p['settings']['cgGalleryItems'] = [{'url': a[k], 'title': t} for k, t in (
+    # 封面一開始就開放；其餘看到那張 CG 的卡片才解鎖（cgOps），不然兩個結局一開遊戲就被劇透（2026-10-19）
+    p['settings']['cgGalleryItems'] = [{'url': a[k], 'title': t, **({} if k == 'cover' else {'locked': True})} for k, t in (
         ('cover', '淡藍與草木灰綠的雨幕'), ('cg-locks', '三把鎖'), ('cg-store', '抽回的傘柄'), ('cg-crane', '一聲對不起'),
         ('cg-letter', '給林宇、許帆'), ('cg-end-a', '各自的公車'), ('cg-end-b', '雨不會停')) if a[k] != a['bg-black']]
-    # 介面：官方晨霧玻璃轉成雨夜版（ui/night.py）。專案 PUT 會整份覆蓋，所以介面也要從這裡帶
-    skin = {'id': 'skill-morning-glass', 'name': '晨霧玻璃', 'author': 'Larch', 'version': '1.1', 'official': True}
-    p['settings']['customInterfaces'] = {f.stem: {'html': f.read_text(encoding='utf-8'), 'enabled': True, 'skin': skin}
+    # 介面：雨夜玻璃（ui/night.py）。這份只給本機預覽用；線上的 PUT 不更新介面，要跑 push_ui.py，收藏頁要匯入 ui/雨夜玻璃.html
+    p['settings']['customInterfaces'] = {f.stem: {'html': f.read_text(encoding='utf-8'), 'enabled': True}
                                          for f in sorted((ROOT / 'ui/rain-night').iterdir())}
     p['settings']['menuUi'] = {'preset': 'night', 'accent': '#8fbfa8', 'title': '淡藍與草木灰綠的雨幕', 'eyebrow': '林宇的意識裡', 'buttons': ['bag', 'save', 'load', 'title']}
 
@@ -70,6 +71,8 @@ def build():
     # 接在 CG 後面的卡片也要有背景，不然上一張 CG 會留在畫面上、立繪疊在 CG 的人身上（作者 2026-10-18 截圖）
     big = {'ending_a1': a['cg-letter'], 'card_r17_candy': a['cg-locks'], 'card_st_pull': a['cg-store'], 'card_st_solve': a['cg-crane'], 'card_letter': a['cg-letter'],
            'ending_a2': a['cg-end-a'], 'ending_b1': a['cg-end-b'], 'ending_b2': a['cg-end-b']}
+    UNLOCK = {'card_r17_candy': 'cg-locks', 'card_st_pull': 'cg-store', 'card_st_solve': 'cg-crane', 'card_letter': 'cg-letter',
+              'ending_a2': 'cg-end-a', 'ending_b1': 'cg-end-b'}   # 每張 CG 第一次出現的卡片
     era = {k: 'hs' for k in ('card_r17_intro', 'card_r17_try', 'card_r17_candy')}
     jumped = {'card_st_shift': bg, 'card_r17_enter': bg, 'card_r17_shift': bg, 'card_r21_back': bg, 'card_st_enter': bg, 'card_st_back': bg,
               'card_letter': None}
@@ -86,7 +89,10 @@ def build():
             extra['bgm'] = a['bgm-end-a']
         if cid == 'ending_b1' and a.get('bgm-end-b'):
             extra['bgm'] = a['bgm-end-b']
-        N(card(cid, cid, a, bg=b or '', era=era.get(cid, 'now'), **extra))
+        n = card(cid, cid, a, bg=b or '', era=era.get(cid, 'now'), **extra)
+        if cid in UNLOCK and a[UNLOCK[cid]] != bg:
+            n['data']['cgOps'] = [{'id': f'cgop-{cid}', 'mode': 'unlock', 'url': a[UNLOCK[cid]]}]
+        N(n)
     N(cards.choice('card_choice', '最後的雨幕', '雨越下越大。手裡的信微微發燙，兩把傘還是冰的。',
                    ['交出信，承認平行線不必勉強交會', '緊握兩把傘退後，把秘密藏起來'], speaker='林宇', bg=a['cg-letter'] if a['cg-letter'] != bg else ''))
 
