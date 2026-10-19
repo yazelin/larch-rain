@@ -9,7 +9,6 @@ export const sleep = ms => new Promise(r => setTimeout(r, Math.max(30, ms / SPEE
 // 注入每個 frame：計時器縮短、時鐘跑快、CSS/WAAPI 動畫與音訊加速
 function timewarp(S) {
   if (S <= 1) return;
-  window.close = () => {};   // 加速時結局一閃就結束，預覽器會關頁，留著讓測試讀完
   const pn = performance.now.bind(performance), dn = Date.now, p0 = pn(), d0 = dn();
   performance.now = () => p0 + (pn() - p0) * S;
   Date.now = () => d0 + (dn() - d0) * S;
@@ -42,7 +41,7 @@ export async function open(base, { mobile = false, width = 1280, height = 800 } 
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
-  page.on('crash', () => console.log('PAGE CRASH')); page.on('close', () => console.log('PAGE CLOSE')); browser.on('disconnected', () => console.log('BROWSER GONE'));
+  page.on('crash', () => console.log('PAGE CRASH'));
   await page.goto(base.startsWith('http') && base.includes('/preview/') ? base : base + '/');
   await new Promise(r => setTimeout(r, 3500));   // 首次載入是網路時間，不跟著加速
   const text = async () => (await Promise.all(page.frames().map(f => f.locator('body').innerText().catch(() => '')))).join(' | ').replace(/\s+/g, ' ');

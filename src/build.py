@@ -90,6 +90,8 @@ def build():
         if cid == 'ending_b1' and a.get('bgm-end-b'):
             extra['bgm'] = a['bgm-end-b']
         n = card(cid, cid, a, bg=b or '', era=era.get(cid, 'now'), **extra)
+        if cid in ('ending_a2', 'ending_b2'):
+            n['data']['stayOnCard'] = True   # 結局最後一張停在畫面上，不要自己跳走（作者提醒的「無下一張時停留在此卡片」）
         if cid in UNLOCK and a[UNLOCK[cid]] != bg:
             n['data']['cgOps'] = [{'id': f'cgop-{cid}', 'mode': 'unlock', 'url': a[UNLOCK[cid]]}]
         N(n)

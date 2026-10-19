@@ -63,7 +63,7 @@ try {
     await ui.advance(); await sleep(400);
    } catch (e) {
     // 換場時畫面框架會整個換掉，剛好讀到就會丟 detached；等一下再讀
-    if (!/detached|Target closed|Execution context/.test(e.message)) throw e;
+    if (!/detached|Target closed|Execution context|has been closed/.test(e.message)) throw e;
     await sleep(800);
    }
   }
