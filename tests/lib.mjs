@@ -2,7 +2,25 @@
 import { chromium, devices } from '/home/ct/larch-preview/node_modules/playwright-core/index.mjs';
 import { spawn } from 'node:child_process';
 export { devices };
-export const sleep = ms => new Promise(r => setTimeout(r, ms));
+// SPEED=16：遊戲裡的時間（計時器、動畫、配音）加速 16 倍，測試這邊的固定等待也除以 16
+export const SPEED = Math.max(1, Number(process.env.SPEED) || 1);
+export const sleep = ms => new Promise(r => setTimeout(r, Math.max(30, ms / SPEED)));
+
+// 注入每個 frame：計時器縮短、時鐘跑快、CSS/WAAPI 動畫與音訊加速
+function timewarp(S) {
+  if (S <= 1) return;
+  window.close = () => {};   // 加速時結局一閃就結束，預覽器會關頁，留著讓測試讀完
+  const pn = performance.now.bind(performance), dn = Date.now, p0 = pn(), d0 = dn();
+  performance.now = () => p0 + (pn() - p0) * S;
+  Date.now = () => d0 + (dn() - d0) * S;
+  const st = window.setTimeout, si = window.setInterval, raf = window.requestAnimationFrame;
+  window.setTimeout = (f, d = 0, ...a) => st(f, d / S, ...a);
+  window.setInterval = (f, d = 0, ...a) => si(f, Math.max(1, d / S), ...a);
+  window.requestAnimationFrame = cb => raf(t => cb(p0 + (t - p0) * S));
+  const play = HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play = function (...a) { try { this.playbackRate = Math.min(S, 16); } catch {} return play.apply(this, a); };
+  si(() => { try { document.getAnimations().forEach(x => { if (x.playbackRate !== S) x.playbackRate = S; }); } catch {} }, 50);
+}
 
 export async function serve(json) {
   const proc = spawn('python3', ['/home/ct/larch-preview/serve.py', json, '--port', '0'], { stdio: ['ignore', 'pipe', 'inherit'] });
@@ -20,11 +38,13 @@ export async function open(base, { mobile = false, width = 1280, height = 800 } 
     args: ['--disable-gpu', '--disable-dev-shm-usage', '--autoplay-policy=no-user-gesture-required', '--no-sandbox']
   });
   const ctx = await browser.newContext(mobile ? { ...devices['iPhone 13'], locale: 'zh-TW' } : { viewport: { width, height }, deviceScaleFactor: 1, locale: 'zh-TW' });
+  if (SPEED > 1) await ctx.addInitScript(timewarp, SPEED);
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
+  page.on('crash', () => console.log('PAGE CRASH')); page.on('close', () => console.log('PAGE CLOSE')); browser.on('disconnected', () => console.log('BROWSER GONE'));
   await page.goto(base.startsWith('http') && base.includes('/preview/') ? base : base + '/');
-  await sleep(3500);
+  await new Promise(r => setTimeout(r, 3500));   // 首次載入是網路時間，不跟著加速
   const text = async () => (await Promise.all(page.frames().map(f => f.locator('body').innerText().catch(() => '')))).join(' | ').replace(/\s+/g, ' ');
   const waitText = async (re, ms = 15000) => {
     const end = Date.now() + ms;

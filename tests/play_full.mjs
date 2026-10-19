@@ -45,7 +45,7 @@ try {
   while (Date.now() < end) {
    try {
     const t = await text(); seen += t;
-    if (END_RE.test(t)) break;
+    if (END_RE.test(seen)) break;   // 用累積讀到的文字判斷：加速時最後一句可能只在畫面上一閃
     const inp = await inputBox();
     if (inp) { await inp.fill('0217'); await page.keyboard.press('Enter'); await sleep(800); continue; }
     const q = Object.keys(CHOICES).find(k => t.includes(k));
